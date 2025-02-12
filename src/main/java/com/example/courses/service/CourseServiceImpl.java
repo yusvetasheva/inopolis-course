@@ -38,20 +38,20 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void addCourse(CourseDTO course) {
-        if (course==null || course.getName()==null || course.getName().isEmpty())
+        if (course == null || course.getName() == null || course.getName().isEmpty())
             throw new IllegalArgumentException("course или course.name не могут быть null в методе addCourse");
         repository.save(mapper.dtoToEntity(course));
     }
 
     /**
      * По ТЗ курс нужно не удалять, а переводить в состояние isActive = false
-     * */
+     */
     @Override
     public void deleteCourseById(Integer id) {
-        if (id==null)
+        if (id == null)
             throw new IllegalArgumentException("id не может быть null в методе deleteCourseById");
         CourseEntity existEntity = repository.findById(id)
-                .orElseThrow(()-> new NoSuchElementException("В БД не курса с id = " + id));
+                .orElseThrow(() -> new NoSuchElementException("В БД не курса с id = " + id));
 
         existEntity.setIsActive(false);
         repository.save(existEntity);
@@ -59,15 +59,15 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void updateCourse(Integer id, CourseDTO course) {
-        if (course==null || course.getName()==null || course.getName().isEmpty() || id==null)
+        if (course == null || course.getName() == null || course.getName().isEmpty() || id == null)
             throw new IllegalArgumentException("Некорректные аргументы в методе updateCourse");
-       CourseEntity existEntity = repository.findById(id)
-               .orElseThrow(()-> new NoSuchElementException("В БД не курса с id = " + id));
+        CourseEntity existEntity = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("В БД не курса с id = " + id));
 
-       existEntity.setName(course.getName());
-       existEntity.setIsActive(course.getIsActive());
-       existEntity.setDateBegin(course.getDateBegin());
+        existEntity.setName(course.getName());
+        existEntity.setIsActive(course.getIsActive());
+        existEntity.setDateBegin(course.getDateBegin());
 
-       repository.save(existEntity);
+        repository.save(existEntity);
     }
 }
