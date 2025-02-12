@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CourseDTO {
-    Integer id;
     String name;
     LocalDate dateBegin;
     Boolean isActive;

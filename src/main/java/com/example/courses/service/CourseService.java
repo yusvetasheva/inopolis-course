@@ -9,9 +9,9 @@ public interface CourseService {
 
     List<CourseDTO> getAllCourses();
 
-    void addCourse(CourseDTO course);
+    CourseDTO addCourse(CourseDTO course);
 
-    void deleteCourseById (Integer id);
+    CourseDTO deleteCourseById (Integer id);
 
-    void updateCourse(Integer id, CourseDTO courseDTO);
+    CourseDTO updateCourse(Integer id, CourseDTO courseDTO);
 }

@@ -20,9 +20,8 @@ public class CourseController {
     }
 
     @PostMapping(value = "/add-course")
-    public ResponseEntity<String> addCourse(@RequestBody CourseDTO courseDTO) {
-        service.addCourse(courseDTO);
-        return ResponseEntity.ok("Курс успешно добавлен");
+    public ResponseEntity<CourseDTO> addCourse(@RequestBody CourseDTO courseDTO) {
+        return ResponseEntity.of(Optional.of(service.addCourse(courseDTO)));
     }
 
     @GetMapping(value = "/get-by-name")
@@ -37,15 +36,14 @@ public class CourseController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<String> deleteCourseById(@PathVariable Integer id){
+    public ResponseEntity<CourseDTO> deleteCourseById(@PathVariable Integer id){
         service.deleteCourseById(id);
-        return ResponseEntity.ok("Курс с id = " + id + " успешно удален");
+        return ResponseEntity.of(Optional.of(service.deleteCourseById(id)));
     }
 
     @PutMapping(value = "/update/{id}")
-    public ResponseEntity<String>updateCourse(@PathVariable Integer id, @RequestBody CourseDTO course){
-        service.updateCourse(id, course);
-        return ResponseEntity.ok("Курс с id = " + id + " успешно обновлен");
+    public ResponseEntity<CourseDTO>updateCourse(@PathVariable Integer id, @RequestBody CourseDTO course){
+        return ResponseEntity.of(Optional.of(service.updateCourse(id, course)));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
