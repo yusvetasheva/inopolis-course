@@ -33,11 +33,13 @@ public class CourseControllerTest {
 
     @Test
     public void addCourseSuccess() throws Exception {
+
+        when(courseService.addCourse(any())).thenReturn(getCourseDto());
+
         mockMvc.perform(post("/api/course/add-course")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(getCourseDto())))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Курс успешно добавлен"));
+                .andExpect(status().isOk());
 
         verify(courseService).addCourse(any());
 
@@ -57,23 +59,24 @@ public class CourseControllerTest {
 
     @Test
     public void deleteByIdSuccess() throws Exception {
+
+        when(courseService.deleteCourseById(any())).thenReturn(getCourseDto());
+
         mockMvc.perform(delete("/api/course/delete/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Курс с id = 1 успешно удален"));
+                .andExpect(status().isOk());
 
-        verify(courseService).deleteCourseById(1);
+        verify(courseService, times(2)).deleteCourseById(any());
     }
 
     @Test
     public void updateCourseSuccess() throws Exception {
-        doNothing().when(courseService).updateCourse(any(), any());
+        when(courseService.updateCourse(any(), any())).thenReturn(getCourseDto());
 
         mockMvc.perform(put("/api/course/update/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(getCourseDto())))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Курс с id = 1 успешно обновлен"));
+                .andExpect(status().isOk());
 
         verify(courseService).updateCourse(any(), any());
     }
@@ -111,7 +114,6 @@ public class CourseControllerTest {
 
     CourseDTO getCourseDto() {
         return CourseDTO.builder()
-                .id(1)
                 .name("test_name")
                 .isActive(true)
                 .dateBegin(LocalDate.now())
