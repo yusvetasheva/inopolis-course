@@ -21,29 +21,29 @@ public class CourseController {
 
     @PostMapping(value = "/add-course")
     public ResponseEntity<CourseDTO> addCourse(@RequestBody CourseDTO courseDTO) {
-        return ResponseEntity.of(Optional.ofNullable(service.addCourse(courseDTO)));
+        return new ResponseEntity<>(service.addCourse(courseDTO), HttpStatus.OK);
     }
 
     @GetMapping(value = "/get-by-name")
     public ResponseEntity<CourseDTO> getCourseByName(@RequestParam String name){
-        return ResponseEntity.of(Optional.ofNullable(service.getCourseByName(name)));
+        return new ResponseEntity<>(service.getCourseByName(name), HttpStatus.OK);
 
     }
 
     @GetMapping(value = "/get-all")
     public ResponseEntity<List<CourseDTO>> getAllCourses(){
-        return ResponseEntity.of(Optional.ofNullable(service.getAllCourses()));
+        return new ResponseEntity<>(service.getAllCourses(), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<CourseDTO> deleteCourseById(@PathVariable Integer id){
         service.deleteCourseById(id);
-        return ResponseEntity.of(Optional.ofNullable(service.deleteCourseById(id)));
+        return new ResponseEntity<>(service.deleteCourseById(id), HttpStatus.OK);
     }
 
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<CourseDTO>updateCourse(@PathVariable Integer id, @RequestBody CourseDTO course){
-        return ResponseEntity.of(Optional.ofNullable(service.updateCourse(id, course)));
+        return new ResponseEntity<>(service.updateCourse(id, course), HttpStatus.OK);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
