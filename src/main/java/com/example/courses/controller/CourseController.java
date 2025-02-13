@@ -1,5 +1,8 @@
 package com.example.courses.controller;
 
+import com.example.courses.aspect.AroundAnnotation;
+import com.example.courses.aspect.LoggingAfter;
+import com.example.courses.aspect.LoggingBefore;
 import com.example.courses.dto.CourseDTO;
 import com.example.courses.service.CourseService;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,9 @@ public class CourseController {
 
     }
 
+    @LoggingAfter
+    @LoggingBefore
+    @AroundAnnotation
     @GetMapping(value = "/get-all")
     public ResponseEntity<List<CourseDTO>> getAllCourses(){
         return ResponseEntity.of(Optional.ofNullable(service.getAllCourses()));
