@@ -14,4 +14,6 @@ public interface CourseService {
     CourseDTO deleteCourseById (Integer id);
 
     CourseDTO updateCourse(Integer id, CourseDTO courseDTO);
+
+    CourseDTO addCommentToCourse(String courseName, String comment);
 }

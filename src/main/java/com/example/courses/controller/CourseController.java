@@ -1,7 +1,9 @@
 package com.example.courses.controller;
 
 import com.example.courses.dto.CourseDTO;
+import com.example.courses.model.AddCommentToCourseRequest;
 import com.example.courses.service.CourseService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,11 @@ public class CourseController {
     @GetMapping(value = "/get-by-name")
     public ResponseEntity<CourseDTO> getCourseByName(@RequestParam String name){
         return new ResponseEntity<>(service.getCourseByName(name), HttpStatus.OK);
+    }
 
+    @PostMapping(value = "/add-comment")
+    public ResponseEntity<CourseDTO> addCommentToCourse(@Valid @RequestBody AddCommentToCourseRequest request){
+        return new ResponseEntity<>(service.addCommentToCourse(request.getCourseName(), request.getCommentText()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/get-all")

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,6 +26,10 @@ public class CourseEntity {
     LocalDate dateBegin;
     @Column(name = "is_active")
     Boolean isActive;
+    @ElementCollection
+    @CollectionTable(name = "course_comment", joinColumns = @JoinColumn(name = "course_id"))
+    @Column(name = "comment_rating")
+    List<String> comments = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

@@ -1,6 +1,7 @@
 package com.example.courses.controller;
 
 import com.example.courses.dto.CourseDTO;
+import com.example.courses.model.AddCommentToCourseRequest;
 import com.example.courses.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -70,6 +72,25 @@ public class CourseControllerTest {
     }
 
     @Test
+    public void addCommentToCourse_Success() throws Exception {
+
+        when(courseService.addCommentToCourse(any(), any())).thenReturn(getCourseDto());
+
+        AddCommentToCourseRequest request = AddCommentToCourseRequest.builder()
+                .courseName("ant")
+                .commentText("ant")
+                .build();
+
+        mockMvc.perform(post("/api/course/add-comment")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments[0]").value("new_comment"));
+
+        verify(courseService, times(1)).addCommentToCourse(any(), any());
+    }
+
+    @Test
     public void updateCourseSuccess() throws Exception {
         when(courseService.updateCourse(any(), any())).thenReturn(getCourseDto());
 
@@ -117,6 +138,7 @@ public class CourseControllerTest {
                 .name("test_name")
                 .isActive(true)
                 .dateBegin(LocalDate.now())
+                .comments(Collections.singletonList("new_comment"))
                 .build();
     }
 }

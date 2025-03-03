@@ -74,4 +74,18 @@ public class CourseServiceImpl implements CourseService {
 
         return mapper.entityToDto(existEntity);
     }
+
+    @Override
+    public CourseDTO addCommentToCourse(String courseName, String comment) {
+
+        Optional<CourseEntity> existEntity = repository.findByName(courseName);
+
+        if (existEntity.isEmpty()) throw new NoSuchElementException("Нет курса с названием  = " + courseName);
+
+        existEntity.get().getComments().add(comment);
+
+        repository.save(existEntity.get());
+
+        return mapper.entityToDto(existEntity.get());
+    }
 }

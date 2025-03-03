@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -14,4 +15,5 @@ public class CourseDTO {
     String name;
     LocalDate dateBegin;
     Boolean isActive;
+    List<String> comments;
 }
