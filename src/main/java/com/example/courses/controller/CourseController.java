@@ -1,6 +1,6 @@
 package com.example.courses.controller;
 
-import com.example.courses.dto.CourseDTO;
+import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.model.AddCommentToCourseRequest;
 import com.example.courses.service.CourseService;
 import jakarta.validation.Valid;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "/api/course")
@@ -49,15 +48,5 @@ public class CourseController {
     @PutMapping(value = "/update/{id}")
     public ResponseEntity<CourseDTO>updateCourse(@PathVariable Integer id, @RequestBody CourseDTO course){
         return new ResponseEntity<>(service.updateCourse(id, course), HttpStatus.OK);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 }

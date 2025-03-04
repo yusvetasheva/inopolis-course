@@ -1,7 +1,7 @@
 package com.example.courses.mapper;
 
-import com.example.courses.dto.CourseDTO;
-import com.example.courses.model.CourseEntity;
+import com.example.courses.model.dto.CourseDTO;
+import com.example.courses.model.entity.CourseEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

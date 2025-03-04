@@ -1,4 +1,4 @@
-package com.example.courses.dto;
+package com.example.courses.model.dto;
 
 import lombok.AccessLevel;
 import lombok.Builder;

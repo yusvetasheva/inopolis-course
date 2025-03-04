@@ -1,6 +1,6 @@
 package com.example.courses.controller;
 
-import com.example.courses.dto.CourseDTO;
+import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.model.AddCommentToCourseRequest;
 import com.example.courses.service.CourseService;
 import com.fasterxml.jackson.databind.ObjectMapper;

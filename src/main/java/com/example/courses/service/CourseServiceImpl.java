@@ -1,8 +1,8 @@
 package com.example.courses.service;
 
-import com.example.courses.dto.CourseDTO;
+import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.mapper.CourseMapper;
-import com.example.courses.model.CourseEntity;
+import com.example.courses.model.entity.CourseEntity;
 import com.example.courses.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
