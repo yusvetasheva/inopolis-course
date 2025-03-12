@@ -1,52 +1,65 @@
 package com.example.courses.controller;
 
-import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.model.AddCommentToCourseRequest;
+import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.service.CourseService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import com.example.courses.service.CourseServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(value = "/api/course")
 public class CourseController {
-    private final CourseService service;
+    private final CourseServiceImpl service;
 
-    public CourseController(CourseService service) {
+    public CourseController(CourseServiceImpl service) {
         this.service = service;
     }
 
     @PostMapping(value = "/add-course")
-    public ResponseEntity<CourseDTO> addCourse(@RequestBody CourseDTO courseDTO) {
-        return new ResponseEntity<>(service.addCourse(courseDTO), HttpStatus.OK);
+    public Mono<ResponseEntity<CourseDTO>> addCourse(@RequestBody CourseDTO courseDTO) {
+
+        return service.addCourse(courseDTO)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound()
+                        .build());
     }
 
     @GetMapping(value = "/get-by-name")
-    public ResponseEntity<CourseDTO> getCourseByName(@RequestParam String name){
-        return new ResponseEntity<>(service.getCourseByName(name), HttpStatus.OK);
+    public Mono<ResponseEntity<CourseDTO>> getCourseByName(@RequestParam String name) {
+        return service.getCourseByName(name)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound()
+                        .build());
     }
 
     @PostMapping(value = "/add-comment")
-    public ResponseEntity<CourseDTO> addCommentToCourse(@Valid @RequestBody AddCommentToCourseRequest request){
-        return new ResponseEntity<>(service.addCommentToCourse(request.getCourseName(), request.getCommentText()), HttpStatus.OK);
+    public Mono<ResponseEntity<CourseDTO>> addCommentToCourse( @RequestBody AddCommentToCourseRequest request) {
+
+        return service.addCommentToCourse(request.getCourseName(), request.getCommentText())
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @GetMapping(value = "/get-all")
-    public ResponseEntity<List<CourseDTO>> getAllCourses(){
-        return new ResponseEntity<>(service.getAllCourses(), HttpStatus.OK);
+    public ResponseEntity<Flux<CourseDTO>> getAllCourses() {
+        Flux<CourseDTO> courses = service.getAllCourses();
+        return ResponseEntity.ok(courses);
     }
 
+
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<CourseDTO> deleteCourseById(@PathVariable Integer id){
-        service.deleteCourseById(id);
-        return new ResponseEntity<>(service.deleteCourseById(id), HttpStatus.OK);
+    public Mono<ResponseEntity<CourseDTO>> deleteCourseById(@PathVariable Integer id) {
+        return service.deleteCourseById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound()
+                        .build());
     }
 
     @PutMapping(value = "/update/{id}")
-    public ResponseEntity<CourseDTO>updateCourse(@PathVariable Integer id, @RequestBody CourseDTO course){
-        return new ResponseEntity<>(service.updateCourse(id, course), HttpStatus.OK);
+    public Mono<ResponseEntity<CourseDTO>> updateCourse(@PathVariable Integer id, @RequestBody CourseDTO course) {
+        return service.updateCourse(id, course).map(ResponseEntity::ok).defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }

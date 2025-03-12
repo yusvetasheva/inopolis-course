@@ -2,13 +2,12 @@ package com.example.courses.service;
 
 import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.mapper.CourseMapper;
-import com.example.courses.model.entity.CourseEntity;
 import com.example.courses.repository.CourseRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class CourseServiceImpl implements CourseService {
@@ -21,71 +20,78 @@ public class CourseServiceImpl implements CourseService {
         this.repository = repository;
     }
 
-    @Override
-    public CourseDTO getCourseByName(String name) {
-        if (name == null || name.isEmpty())
-            throw new IllegalArgumentException("name в методе getCourseByName не может быть null/empty");
 
-        Optional<CourseEntity> entity = repository.findByName(name.trim());
-        if (entity.isPresent()) return mapper.entityToDto(entity.get());
-        else throw new NoSuchElementException("Нет курса с названием = " + name);
+    @Override
+    public Mono<CourseDTO> getCourseByName(String name) {
+        if (name == null || name.isEmpty()) {
+            return Mono.error(new IllegalArgumentException("name в методе getCourseByName не может быть null/empty"));
+        }
+
+        return repository.findByName(name.trim())  // Метод должен возвращать Mono<CourseEntity>
+                .map(mapper::entityToDto)  // Преобразуем CourseEntity -> CourseDTO
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Нет курса с названием = " + name)));
+    }
+
+
+    @Override
+    public Flux<CourseDTO> getAllCourses() {
+        return repository.findAll().map(mapper::entityToDto);
     }
 
     @Override
-    public List<CourseDTO> getAllCourses() {
-        return repository.findAll().stream().map(mapper::entityToDto).toList();
-    }
-
-    @Override
-    public CourseDTO addCourse(CourseDTO course) {
+    public Mono<CourseDTO> addCourse(CourseDTO course) {
         if (course == null || course.getName() == null || course.getName().isEmpty())
-            throw new IllegalArgumentException("course или course.name не могут быть null в методе addCourse");
-        repository.save(mapper.dtoToEntity(course));
-        return course;
+            return Mono.error(new IllegalArgumentException("course или course.name не могут быть null в методе addCourse"));
+
+        return repository.save(mapper.dtoToEntity(course)).map(mapper::entityToDto);
+
     }
 
     /**
      * По ТЗ курс нужно не удалять, а переводить в состояние isActive = false
      */
     @Override
-    public CourseDTO deleteCourseById(Integer id) {
+    public Mono<CourseDTO> deleteCourseById(Integer id) {
         if (id == null)
-            throw new IllegalArgumentException("id не может быть null в методе deleteCourseById");
-        CourseEntity existEntity = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("В БД не курса с id = " + id));
+            return Mono.error(new IllegalArgumentException("id не может быть null в методе deleteCourseById"));
 
-        existEntity.setIsActive(false);
-        repository.save(existEntity);
+        return repository.findById(id)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("В БД не курса с id = " + id)))
+                .flatMap(course -> {
+                    course.setIsActive(false);
+                    return repository.save(course);
+                })
+                .map(mapper::entityToDto);
 
-        return mapper.entityToDto(existEntity);
     }
 
     @Override
-    public CourseDTO updateCourse(Integer id, CourseDTO course) {
+    public Mono<CourseDTO> updateCourse(Integer id, CourseDTO course) {
         if (course == null || course.getName() == null || course.getName().isEmpty() || id == null)
-            throw new IllegalArgumentException("Некорректные аргументы в методе updateCourse");
-        CourseEntity existEntity = repository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("В БД не курса с id = " + id));
+            return Mono.error(new IllegalArgumentException("Некорректные аргументы в методе updateCourse"));
 
-        existEntity.setName(course.getName());
-        existEntity.setDateBegin(course.getDateBegin());
+        return repository.findById(id)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("В БД не курса с id = " + id)))
+                .flatMap(exist -> {
+                    exist.setName(course.getName());
+                    exist.setDateBegin(course.getDateBegin());
 
-        repository.save(existEntity);
+                    return repository.save(exist);
+                })
+                .map(mapper::entityToDto);
 
-        return mapper.entityToDto(existEntity);
     }
 
     @Override
-    public CourseDTO addCommentToCourse(String courseName, String comment) {
+    public Mono<CourseDTO> addCommentToCourse(String courseName, String comment) {
 
-        Optional<CourseEntity> existEntity = repository.findByName(courseName);
+        return repository.findByName(courseName)
+                .switchIfEmpty(Mono.error(new NoSuchElementException("Нет курса с названием  = " + courseName)))
+                .flatMap(course -> {
+                    course.getComments().add(comment);
 
-        if (existEntity.isEmpty()) throw new NoSuchElementException("Нет курса с названием  = " + courseName);
-
-        existEntity.get().getComments().add(comment);
-
-        repository.save(existEntity.get());
-
-        return mapper.entityToDto(existEntity.get());
+                    return repository.save(course);
+                })
+                .map(mapper::entityToDto);
     }
 }

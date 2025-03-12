@@ -1,19 +1,21 @@
 package com.example.courses.service;
 
 import com.example.courses.model.dto.CourseDTO;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface CourseService {
-    CourseDTO getCourseByName(String name);
+    Mono<CourseDTO> getCourseByName(String name);
 
-    List<CourseDTO> getAllCourses();
+    Flux<CourseDTO> getAllCourses();
 
-    CourseDTO addCourse(CourseDTO course);
+    Mono<CourseDTO> addCourse(CourseDTO course);
 
-    CourseDTO deleteCourseById (Integer id);
+    Mono<CourseDTO> deleteCourseById (Integer id);
 
-    CourseDTO updateCourse(Integer id, CourseDTO courseDTO);
+    Mono<CourseDTO> updateCourse(Integer id, CourseDTO courseDTO);
 
-    CourseDTO addCommentToCourse(String courseName, String comment);
+    Mono<CourseDTO> addCommentToCourse(String courseName, String comment);
 }

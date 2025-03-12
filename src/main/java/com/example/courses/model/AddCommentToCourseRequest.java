@@ -4,8 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.NotBlank;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -15,4 +13,12 @@ public class AddCommentToCourseRequest {
     String courseName;
     @NotBlank(message = "Поле commentText не может быть пустым")
     String commentText;
+
+    public String getCourseName(){
+        return this.courseName;
+    }
+
+    public String getCommentText(){
+        return this.commentText;
+    }
 }
