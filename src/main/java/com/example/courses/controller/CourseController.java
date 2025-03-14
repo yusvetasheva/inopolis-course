@@ -2,7 +2,6 @@ package com.example.courses.controller;
 
 import com.example.courses.model.AddCommentToCourseRequest;
 import com.example.courses.model.dto.CourseDTO;
-import com.example.courses.service.CourseService;
 import com.example.courses.service.CourseServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

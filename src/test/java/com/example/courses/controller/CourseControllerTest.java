@@ -1,144 +1,141 @@
-//package com.example.courses.controller;
+//import com.example.courses.controller.CourseController;
 //
 //import com.example.courses.model.dto.CourseDTO;
 //import com.example.courses.model.AddCommentToCourseRequest;
 //import com.example.courses.service.CourseService;
 //import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
 //
 //import org.springframework.http.MediaType;
-//import org.springframework.test.web.servlet.MockMvc;
 //
 //import java.time.LocalDate;
 //import java.util.Collections;
 //import java.util.List;
 //
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 //
-//@WebMvcTest(CourseController.class)
+//@WebFluxTest(CourseController.class)
 //public class CourseControllerTest {
 //
 //    @Autowired
-//    ObjectMapper objectMapper;
-//
-//    @Autowired
-//    MockMvc mockMvc;
+//    private WebTestClient webTestClient;
 //
 //    @MockBean
-//    CourseService courseService;
+//    private CourseService courseService;
 //
 //    @Test
-//    public void addCourseSuccess() throws Exception {
+//    public void getAllCoursesSuccess() {
+//        // Данные для теста
+//        CourseDTO course1 = new CourseDTO("Java Basics", LocalDate.now(), true, List.of("Good course"));
+//        CourseDTO course2 = new CourseDTO("Spring Boot", LocalDate.now(), true, List.of("Very helpful"));
 //
-//        when(courseService.addCourse(any())).thenReturn(getCourseDto());
+//        // Мокаем сервис
+//        when(courseService.getAllCourses()).thenReturn(Flux.just(course1, course2));
 //
-//        mockMvc.perform(post("/api/course/add-course")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(getCourseDto())))
-//                .andExpect(status().isOk());
+//        // Тестируем GET-запрос
+//        webTestClient.get()
+//                .uri("/api/course/get-all")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBodyList(CourseDTO.class)
+//                .hasSize(2)
+//                .contains(course1, course2);
 //
-//        verify(courseService).addCourse(any());
-//
-//    }
-//
-//    @Test
-//    public void addCourseNullNameError() throws Exception {
-//
-//        mockMvc.perform(post("/api/course/add-course")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(null)))
-//                .andExpect(status().is4xxClientError());
-//
-//        verify(courseService, never()).addCourse(any());
-//
-//    }
-//
-//    @Test
-//    public void deleteByIdSuccess() throws Exception {
-//
-//        when(courseService.deleteCourseById(any())).thenReturn(getCourseDto());
-//
-//        mockMvc.perform(delete("/api/course/delete/{id}", 1)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//
-//        verify(courseService, times(2)).deleteCourseById(any());
-//    }
-//
-//    @Test
-//    public void addCommentToCourse_Success() throws Exception {
-//
-//        when(courseService.addCommentToCourse(any(), any())).thenReturn(getCourseDto());
-//
-//        AddCommentToCourseRequest request = AddCommentToCourseRequest.builder()
-//                .courseName("ant")
-//                .commentText("ant")
-//                .build();
-//
-//        mockMvc.perform(post("/api/course/add-comment")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.comments[0]").value("new_comment"));
-//
-//        verify(courseService, times(1)).addCommentToCourse(any(), any());
-//    }
-//
-//    @Test
-//    public void updateCourseSuccess() throws Exception {
-//        when(courseService.updateCourse(any(), any())).thenReturn(getCourseDto());
-//
-//        mockMvc.perform(put("/api/course/update/{id}", 1)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(getCourseDto())))
-//                .andExpect(status().isOk());
-//
-//        verify(courseService).updateCourse(any(), any());
-//    }
-//
-//    @Test
-//    public void getCourseByNameSuccess() throws Exception {
-//
-//        when(courseService.getCourseByName(any())).thenReturn(getCourseDto());
-//
-//        mockMvc.perform(get("/api/course/get-by-name")
-//                        .param("name", "test_name")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.name").value("test_name"))
-//                .andExpect(jsonPath("$.isActive").value(true))
-//                .andExpect(jsonPath("$.dateBegin").value(LocalDate.now().toString()));
-//
-//        verify(courseService).getCourseByName(any());
-//    }
-//
-//    @Test
-//    public void getAllCoursesSuccess() throws Exception {
-//        when(courseService.getAllCourses()).thenReturn(List.of(getCourseDto()));
-//
-//        mockMvc.perform(get("/api/course/get-all")
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$[0].name").value("test_name"))
-//                .andExpect(jsonPath("$[0].isActive").value(true))
-//                .andExpect(jsonPath("$[0].dateBegin").value(LocalDate.now().toString()));
-//
+//        // Проверяем, что сервис вызывался
 //        verify(courseService).getAllCourses();
 //    }
-//
-//
-//    CourseDTO getCourseDto() {
-//        return CourseDTO.builder()
-//                .name("test_name")
-//                .isActive(true)
-//                .dateBegin(LocalDate.now())
-//                .comments(Collections.singletonList("new_comment"))
-//                .build();
-//    }
-//}
+////
+////    @Test
+////    public void addCourseNullNameError() throws Exception {
+////
+////        mockMvc.perform(post("/api/course/add-course")
+////                        .contentType(MediaType.APPLICATION_JSON)
+////                        .content(objectMapper.writeValueAsString(null)))
+////                .andExpect(status().is4xxClientError());
+////
+////        verify(courseService, never()).addCourse(any());
+////
+////    }
+////
+////    @Test
+////    public void deleteByIdSuccess() throws Exception {
+////
+////        when(courseService.deleteCourseById(any())).thenReturn(getCourseDto());
+////
+////        mockMvc.perform(delete("/api/course/delete/{id}", 1)
+////                        .contentType(MediaType.APPLICATION_JSON))
+////                .andExpect(status().isOk());
+////
+////        verify(courseService, times(2)).deleteCourseById(any());
+////    }
+////
+////    @Test
+////    public void addCommentToCourse_Success() throws Exception {
+////
+////        when(courseService.addCommentToCourse(any(), any())).thenReturn(getCourseDto());
+////
+////        AddCommentToCourseRequest request = AddCommentToCourseRequest.builder()
+////                .courseName("ant")
+////                .commentText("ant")
+////                .build();
+////
+////        mockMvc.perform(post("/api/course/add-comment")
+////                        .contentType(MediaType.APPLICATION_JSON)
+////                        .content(objectMapper.writeValueAsString(request)))
+////                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$.comments[0]").value("new_comment"));
+////
+////        verify(courseService, times(1)).addCommentToCourse(any(), any());
+////    }
+////
+////    @Test
+////    public void updateCourseSuccess() throws Exception {
+////        when(courseService.updateCourse(any(), any())).thenReturn(getCourseDto());
+////
+////        mockMvc.perform(put("/api/course/update/{id}", 1)
+////                        .contentType(MediaType.APPLICATION_JSON)
+////                        .content(objectMapper.writeValueAsString(getCourseDto())))
+////                .andExpect(status().isOk());
+////
+////        verify(courseService).updateCourse(any(), any());
+////    }
+////
+////    @Test
+////    public void getCourseByNameSuccess() throws Exception {
+////
+////        when(courseService.getCourseByName(any())).thenReturn(getCourseDto());
+////
+////        mockMvc.perform(get("/api/course/get-by-name")
+////                        .param("name", "test_name")
+////                        .contentType(MediaType.APPLICATION_JSON))
+////                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$.name").value("test_name"))
+////                .andExpect(jsonPath("$.isActive").value(true))
+////                .andExpect(jsonPath("$.dateBegin").value(LocalDate.now().toString()));
+////
+////        verify(courseService).getCourseByName(any());
+////    }
+////
+////    @Test
+////    public void getAllCoursesSuccess() throws Exception {
+////        when(courseService.getAllCourses()).thenReturn(List.of(getCourseDto()));
+////
+////        mockMvc.perform(get("/api/course/get-all")
+////                        .contentType(MediaType.APPLICATION_JSON))
+////                .andExpect(status().isOk())
+////                .andExpect(jsonPath("$[0].name").value("test_name"))
+////                .andExpect(jsonPath("$[0].isActive").value(true))
+////                .andExpect(jsonPath("$[0].dateBegin").value(LocalDate.now().toString()));
+////
+////        verify(courseService).getAllCourses();
+////    }
+////
+////
+////    CourseDTO getCourseDto() {
+////        return CourseDTO.builder()
+////                .name("test_name")
+////                .isActive(true)
+////                .dateBegin(LocalDate.now())
+////                .comments(Collections.singletonList("new_comment"))
+////                .build();
+////    }
+////}
