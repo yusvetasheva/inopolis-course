@@ -1,16 +1,27 @@
+//package com.example.courses.controller;
+//
 //import com.example.courses.controller.CourseController;
 //
 //import com.example.courses.model.dto.CourseDTO;
 //import com.example.courses.model.AddCommentToCourseRequest;
 //import com.example.courses.service.CourseService;
 //import com.fasterxml.jackson.databind.ObjectMapper;
+//import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //
+//import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+//import org.springframework.boot.test.mock.mockito.MockBean;
+//import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 //import org.springframework.http.MediaType;
+//import org.springframework.test.web.reactive.server.WebTestClient;
+//import reactor.core.publisher.Flux;
 //
 //import java.time.LocalDate;
 //import java.util.Collections;
 //import java.util.List;
+//
+//import static org.mockito.Mockito.verify;
+//import static org.mockito.Mockito.when;
 //
 //
 //@WebFluxTest(CourseController.class)
@@ -21,6 +32,9 @@
 //
 //    @MockBean
 //    private CourseService courseService;
+//
+//    @MockBean
+//    private ReactiveCrudRepository repository;
 //
 //    @Test
 //    public void getAllCoursesSuccess() {
@@ -138,4 +152,4 @@
 ////                .comments(Collections.singletonList("new_comment"))
 ////                .build();
 ////    }
-////}
+//}

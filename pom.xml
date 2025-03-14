@@ -89,6 +89,20 @@
 			<artifactId>reactor-core</artifactId>
 		</dependency>
 
+		<!-- Spring Boot Starter Test (включает JUnit, AssertJ, Mockito) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<!-- Исключаем JUnit 4, так как используем JUnit 5 -->
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 	</dependencies>
 
 	<build>
