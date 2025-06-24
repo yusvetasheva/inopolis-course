@@ -23,6 +23,12 @@
 	</properties>
 
 	<dependencies>
+		<!-- Eurika -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<version>4.2.0</version>
+		</dependency>
 
 		<!-- WebFlux -->
 		<dependency>
