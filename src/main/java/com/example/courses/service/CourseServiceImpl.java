@@ -3,6 +3,9 @@ package com.example.courses.service;
 import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.mapper.CourseMapper;
 import com.example.courses.repository.CourseRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -10,16 +13,13 @@ import reactor.core.publisher.Mono;
 import java.util.NoSuchElementException;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseServiceImpl implements CourseService {
 
-    private final CourseRepository repository;
+    CourseRepository repository;
 
-    private final CourseMapper mapper = CourseMapper.INSTANCE;
-
-    public CourseServiceImpl(CourseRepository repository) {
-        this.repository = repository;
-    }
-
+    CourseMapper mapper;
 
     @Override
     public Mono<CourseDTO> getCourseByName(String name) {

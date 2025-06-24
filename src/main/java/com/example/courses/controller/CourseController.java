@@ -4,6 +4,9 @@ import com.example.courses.model.AddCommentToCourseRequest;
 import com.example.courses.model.dto.CourseDTO;
 import com.example.courses.service.CourseService;
 import com.example.courses.service.CourseServiceImpl;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -11,12 +14,10 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping(value = "/api/course")
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class CourseController {
-    private final CourseService service;
-
-    public CourseController(CourseServiceImpl service) {
-        this.service = service;
-    }
+    CourseService service;
 
     @PostMapping(value = "/add-course")
     public Mono<ResponseEntity<CourseDTO>> addCourse(@RequestBody CourseDTO courseDTO) {
